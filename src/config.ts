@@ -1,12 +1,12 @@
 export const siteConfig: SiteConfig = {
-    title: "Hi! Jazee",
+    title: "Hi! Csjhuang",
     language: "zh",
-    description: "Jazee's personal blog. Powered by Astro Blog Theme Blur.",
-    keywords: "Jazee, blog, personal blog, Astro, Astro Blog Theme Blur",
-    author: "Jazee",
+    description: "Csjhuang's personal blog. Powered by Astro Blog Theme Blur.",
+    keywords: "csjhuang, blog, personal blog, Astro, Astro Blog Theme Blur",
+    author: "Csjhuang",
     avatar: "/avatar.png",
     favicon: "/favicon.png",
-    site: "https://jaze.top",
+    site: "https://blog.csjhuang.net",
 
     page_size: 10,
 };
@@ -33,12 +33,12 @@ export const socialLinks: SocialLink[] = [
     {
         label: "GitHub",
         icon: "mdi-github",
-        url: "https://github.com/Jazee6",
+        url: "https://github.com/efficacy38",
     },
     {
         label: "Email",
         icon: "material-symbols:mail-rounded",
-        url: "mailto:jazee@jaze.top",
+        url: "mailto:efficacy38@proton.me",
     },
 ];
 

@@ -1,10 +1,10 @@
 {
-  "name": "Hi! Jazee",
-  "short_name": "Jazee's Blog",
+  "name": "Hi! Csjhuang",
+  "short_name": "CsJhuang's Blog",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#fff",
-  "description": "Jazee's Blog",
+  "description": "Csjhuang's Blog",
   "icons": [
     {
       "src": "/pwa.webp",
@@ -15,7 +15,7 @@
   "related_applications": [
     {
       "platform": "web",
-      "url": "https://jaze.top"
+      "url": "https://blog.csjhuang.net"
     }
   ]
 }
