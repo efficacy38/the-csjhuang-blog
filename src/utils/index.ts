@@ -1,4 +1,4 @@
-import {siteConfig} from "../config.ts";
+import { siteConfig } from "../config.ts";
 
 export function debounce(fn: Function, delay: number = 100) {
     let timeoutId: NodeJS.Timeout;
@@ -11,9 +11,9 @@ export function debounce(fn: Function, delay: number = 100) {
 }
 
 export function getTitle(title: string) {
-    return title + ' - ' + siteConfig.title
+    return title + " - " + siteConfig.title;
 }
 
 export function getDesc(desc: string) {
-    return desc + ' - ' + siteConfig.description
+    return desc + " - " + siteConfig.description;
 }

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import {siteConfig} from "../config";
+import { siteConfig } from "../config";
 import Comment from "../components/Comment.astro";
 
 interface Props {
@@ -11,19 +11,15 @@ interface Props {
     comments?: boolean;
 }
 
-const {title, description, image, comments} = Astro.props
+const { title, description, image, comments } = Astro.props;
 ---
+
 <BaseLayout title={title} description={description} image={image}>
     <main class="mt-20 mb-4">
         <div class="container-global">
-            <slot/>
+            <slot />
 
-            {
-                comments && siteConfig.twikoo_uri &&
-                    <Comment/>
-            }
+            {comments && siteConfig.twikoo_uri && <Comment />}
         </div>
     </main>
 </BaseLayout>
-
-

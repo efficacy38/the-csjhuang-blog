@@ -1,8 +1,8 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import {siteConfig} from "../config";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { siteConfig } from "../config";
 import Search from "../components/Search.astro";
 
 interface Props {
@@ -14,37 +14,41 @@ interface Props {
 const {
     title = `${siteConfig.title} - ${siteConfig.description}`,
     description = siteConfig.description,
-    image = siteConfig.avatar
-} = Astro.props
+    image = siteConfig.avatar,
+} = Astro.props;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang={siteConfig.language}>
-<head>
-    <BaseHead title={title} description={description} image={image}/>
-</head>
-<script is:inline>
-    const setTheme = (theme) => {
-        document.documentElement.classList.add(theme);
-    }
+    <head>
+        <BaseHead title={title} description={description} image={image} />
+        <script is:inline>
+            const setTheme = (theme) => {
+                document.documentElement.classList.add(theme);
+            };
 
-    let theme = (() => {
-        if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-            return localStorage.getItem("theme");
-        }
-        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-            return "dark";
-        }
-        return "light";
-    })();
+            let theme = (() => {
+                if (
+                    typeof localStorage !== "undefined" &&
+                    localStorage.getItem("theme")
+                ) {
+                    return localStorage.getItem("theme");
+                }
+                if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                    return "dark";
+                }
+                return "light";
+            })();
 
-    theme === "light" ? setTheme("light") : setTheme("dark");
-    localStorage.setItem("theme", theme);
-</script>
-<body>
-<Search/>
-<Header/>
-<slot/>
-<Footer/>
-</body>
+            theme === "light" ? setTheme("light") : setTheme("dark");
+            localStorage.setItem("theme", theme);
+        </script></head
+    >
+
+    <body>
+        <Search />
+        <Header />
+        <slot />
+        <Footer />
+    </body>
 </html>
