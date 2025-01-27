@@ -14,6 +14,10 @@ export const siteConfig: SiteConfig = {
 export const navBarConfig: NavBarConfig = {
     links: [
         {
+            name: "Tags",
+            url: "/tags",
+        },
+        {
             name: "Projects",
             url: "/projects",
         },

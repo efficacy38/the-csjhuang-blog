@@ -41,7 +41,7 @@ pnpm new
 - [x] twikoo_visitors
 - [x] Search
 - [ ] View Transition
-- [ ] Tags
+- [x] Tags
 - [ ] Next/Prev
 - [ ] hero image
 - [ ] AI summary

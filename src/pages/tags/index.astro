@@ -1,0 +1,45 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import { getCollection } from "astro:content";
+import { getTitle, getDesc } from "../../utils";
+import { Icon } from "astro-icon/components";
+const allPosts = await getCollection("posts");
+const uniqueTags = [
+  ...new Set(allPosts.map((post: any) => post.data.tags).flat()),
+];
+const data = uniqueTags.map((tag) => {
+  const filteredPostCount = allPosts.filter((post: any) =>
+    post.data.tags.includes(tag),
+  ).length;
+  return {
+    tag: tag,
+    count: filteredPostCount,
+  };
+});
+const pageTitle = getTitle("Tag Index");
+---
+
+<PageLayout title={pageTitle} description={getDesc("The Tag Index Page")}>
+  <ul data-pagefind-body>
+    {
+      data.map(({ tag, count }) => (
+        <li>
+          <a href={`/tags/${tag}`} class="flex items-baseline p-4 card mb-4">
+            <h2 class="font-bold text-xl line-clamp-1">{tag}</h2>
+            <div
+              class="ml-2 rounded-lg w-6 h-6
+                inline-flex items-center justify-center 
+                bg-gray-200 text-gray-700 text-xl font-bold"
+            >
+              {count}
+            </div>
+            <Icon
+              class="ml-auto w-7 h-7 self-end shrink-0"
+              name="material-symbols:open-in-new"
+            />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</PageLayout>

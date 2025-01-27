@@ -7,6 +7,7 @@ export const postSchema = z.object({
     pubDate: z.coerce.date(),
     // heroImage: z.string().optional(),
     isDraft: z.boolean().optional(),
+    tags: z.array(z.string()).optional(),
 });
 
 const posts = defineCollection({
