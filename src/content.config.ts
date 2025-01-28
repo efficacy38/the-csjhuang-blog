@@ -8,6 +8,7 @@ export const postSchema = z.object({
     // heroImage: z.string().optional(),
     isDraft: z.boolean().optional(),
     tags: z.array(z.string()).optional(),
+    slug: z.string(),
 });
 
 const posts = defineCollection({
