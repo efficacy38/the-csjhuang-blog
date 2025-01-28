@@ -1,3 +1,5 @@
+@import "@microflash/remark-callout-directives/theme/github";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -88,4 +90,8 @@ html.dark .astro-code span {
     font-style: var(--shiki-dark-font-style) !important;
     font-weight: var(--shiki-dark-font-weight) !important;
     text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.callout-title {
+    align-self: end;
 }

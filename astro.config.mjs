@@ -1,10 +1,14 @@
-import {defineConfig} from 'astro/config';
+import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwind from "@astrojs/tailwind";
 import icon from "astro-icon";
-import {remarkModifiedTime} from "./src/utils/remark-modified-time";
-import {siteConfig} from "./src/config";
+import { remarkModifiedTime } from "./src/utils/remark-modified-time";
+import remarkDirective from "remark-directive";
+import remarkCalloutDirectives from "@microflash/remark-callout-directives"
+import githubTheme from '@microflash/remark-callout-directives/config/github'
+
+import { siteConfig } from "./src/config";
 
 // https://astro.build/config
 export default defineConfig({
@@ -19,7 +23,11 @@ export default defineConfig({
                 dark: 'one-dark-pro'
             }
         },
-        remarkPlugins: [remarkModifiedTime]
+        remarkPlugins: [
+            remarkModifiedTime,
+            remarkDirective,
+            [remarkCalloutDirectives, githubTheme]
+        ]
     },
     devToolbar: {
         enabled: false
