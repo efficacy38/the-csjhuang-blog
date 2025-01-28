@@ -95,3 +95,7 @@ html.dark .astro-code span {
 .callout-title {
     align-self: end;
 }
+
+.callout {
+    margin-bottom: 1rem
+}
