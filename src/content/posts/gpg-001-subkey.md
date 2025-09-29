@@ -8,11 +8,20 @@ tags:
     - "gpg"
 ---
 
-在前一篇 blog 中已經先介紹 gpg 的簡單用法，這篇 blog 主要面對的是 gpg 的進階用法 - gpg subkey
-
 ## Intro
 
-// TODO: add some intro
+在前一篇 GPG 101 中，我們學會了如何產生 GPG key 以及基本的加解密、簽章操作。當我們用 `gpg --gen-key` 產生 key 的時候，其實 GPG 預設會幫我們產生一把主鑰（Master Key）以及一把用於加密的子鑰（Subkey）。
+
+為什麼需要 Subkey 呢？
+
+最主要的原因是**安全性**。一般來說，我們會將 Master Key 存放在一個安全的離線環境（例如 USB、或是紙本），並只在必要時（例如簽署其他的 key，或是撤銷 subkey）才拿出來使用。而日常的簽章、加密等操作，則是使用 Subkey 來進行。
+
+這樣做的好處是，萬一日常使用的 Subkey 不幸外洩了，我們可以輕易地用 Master Key 將其撤銷，並重新產生一把新的 Subkey。整個信任鏈不會因為 Subkey 的外洩而中斷，因為你的 Master Key 仍然是安全的。
+
+這篇文章將會深入介紹如何管理與使用 GPG Subkey，包含：
+- 產生不同用途的 Subkey
+- 如何安全地匯出 Subkey（不含 Master Key 的私鑰）
+- 如何指定使用某個 Subkey 來進行簽章
 
 ## 環境安裝
 
