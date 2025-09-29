@@ -13,12 +13,12 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/mdx": "^4.0.3",
-    "@astrojs/rss": "^4.0.10",
-    "@astrojs/sitemap": "^3.2.1",
-    "@astrojs/tailwind": "^5.1.4",
+    "@astrojs/mdx": "^4.3.6",
+    "@astrojs/rss": "^4.0.12",
+    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/tailwind": "^6.0.2",
     "@iconify-json/material-symbols": "^1.2.12",
-    "astro": "^5.1.1",
+    "astro": "^5.14.1",
     "astro-icon": "^1.1.4",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.2"
