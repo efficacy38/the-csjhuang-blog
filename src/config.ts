@@ -18,6 +18,10 @@ export const navBarConfig: NavBarConfig = {
             url: "/tags",
         },
         {
+            name: "Notes",
+            url: "/notes",
+        },
+        {
             name: "Projects",
             url: "/projects",
         },

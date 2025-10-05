@@ -8,7 +8,10 @@ import type { Page } from "astro";
 
 export async function getStaticPaths({ paginate }) {
     const posts = await getCollection("posts", ({ data }) => {
-        return import.meta.env.PROD ? data.isDraft !== true : true;
+        return (
+            !data.tags?.includes("note") &&
+            (import.meta.env.PROD ? data.isDraft !== true : true)
+        );
     });
     posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
     return paginate(posts, { pageSize: siteConfig.page_size });
