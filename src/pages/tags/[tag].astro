@@ -100,12 +100,12 @@ export async function getStaticPaths() {
           <li class="post-item">
             <a
               class="card p-4 flex flex-col group block"
-              href={item.type === 'note' ? `/notes/${item.data.slug}` : `/posts/${item.data.slug}`}
+              href={item.type === 'note' ? `/notes/${item.data.slug}/` : `/posts/${item.data.slug}/`}
             >
               <div class="flex items-start justify-between gap-4">
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2">
-                    <h2 class="text-xl font-bold line-clamp-1 text-primary group-hover:text-accent transition-colors">
+                    <h2 class="text-xl font-bold line-clamp-1 text-primary group-hover:text-accent transition-colors" transition:name={`title-${item.data.slug}`}>
                       {item.data.title}
                     </h2>
                     {item.type === 'note' && (

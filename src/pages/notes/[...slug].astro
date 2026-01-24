@@ -129,7 +129,7 @@ const haveToc = headings.some(
                 <div class="flex justify-between gap-4">
                     {prevNote ? (
                         <a
-                            href={`/notes/${prevNote.data.slug}`}
+                            href={`/notes/${prevNote.data.slug}/`}
                             class="flex-1 group p-4 rounded-xl border border-border hover:border-accent transition-colors"
                             data-prev-url={`/notes/${prevNote.data.slug}`}
                         >
@@ -144,7 +144,7 @@ const haveToc = headings.some(
                     ) : <div class="flex-1" />}
                     {nextNote ? (
                         <a
-                            href={`/notes/${nextNote.data.slug}`}
+                            href={`/notes/${nextNote.data.slug}/`}
                             class="flex-1 group p-4 rounded-xl border border-border hover:border-accent transition-colors text-right"
                             data-next-url={`/notes/${nextNote.data.slug}`}
                         >

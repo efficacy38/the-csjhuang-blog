@@ -35,7 +35,7 @@ const { page } = Astro.props;
                     <li>
                         <a
                             class="min-h-36 card p-4 flex gap-4 group"
-                            href={`/posts/${post.id}`}
+                            href={`/posts/${post.data.slug}/`}
                         >
                             {post.data.heroImage && (
                                 <img
@@ -53,7 +53,7 @@ const { page } = Astro.props;
                                             name="material-symbols:push-pin"
                                         />
                                     )}
-                                    <h2 class="text-xl font-bold line-clamp-1 text-primary group-hover:text-accent transition-colors">
+                                    <h2 class="text-xl font-bold line-clamp-1 text-primary group-hover:text-accent transition-colors" transition:name={`title-${post.data.slug}`}>
                                         {post.data.title}
                                     </h2>
                                 </div>

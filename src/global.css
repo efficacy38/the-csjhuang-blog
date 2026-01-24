@@ -147,3 +147,21 @@ html.dark .astro-code span {
     border-radius: 0 !important;
     color: inherit !important;
 }
+
+/* View transitions */
+/* Disable fade for root to prevent blink */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0s;
+}
+
+/* Prevent white background flash on title transitions in dark mode */
+::view-transition-image-pair(*) {
+    background: transparent;
+}
+
+::view-transition-old(*),
+::view-transition-new(*) {
+    background: transparent;
+}
+

@@ -33,7 +33,7 @@ const { page } = Astro.props;
       {
         page.data.map((post) => (
           <li>
-            <a class="min-h-36 card p-4 flex gap-4 group" href={`/notes/${post.data.slug}`}>
+            <a class="min-h-36 card p-4 flex gap-4 group" href={`/notes/${post.data.slug}/`}>
               {post.data.heroImage && (
                 <img
                   src={post.data.heroImage}
@@ -50,7 +50,7 @@ const { page } = Astro.props;
                       name="material-symbols:push-pin"
                     />
                   )}
-                  <h2 class="text-xl font-bold line-clamp-1 text-primary group-hover:text-accent transition-colors">{post.data.title}</h2>
+                  <h2 class="text-xl font-bold line-clamp-1 text-primary group-hover:text-accent transition-colors" transition:name={`title-${post.data.slug}`}>{post.data.title}</h2>
                 </div>
                 <p class="line-clamp-2 text-secondary">{post.data.description}</p>
                 <div class="mt-auto flex">

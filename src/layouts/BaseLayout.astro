@@ -74,8 +74,13 @@ const {
             // Setup theme toggle after DOM is ready
             document.addEventListener("DOMContentLoaded", setupThemeToggle);
 
-            // Re-apply theme and setup after View Transitions
-            document.addEventListener("astro:after-swap", applyTheme);
+            // Copy theme class to new document BEFORE swap to prevent flash
+            document.addEventListener("astro:before-swap", (event) => {
+                const theme = getThemePreference();
+                event.newDocument.documentElement.classList.add(theme);
+            });
+
+            // Setup theme toggle after View Transitions
             document.addEventListener("astro:page-load", setupThemeToggle);
         </script></head
     >
