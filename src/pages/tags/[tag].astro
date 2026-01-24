@@ -82,6 +82,7 @@ export async function getStaticPaths() {
             {relatedTags.map((relatedTag: string) => (
               <a
                 href={`/tags/${relatedTag}`}
+                data-astro-prefetch="hover"
                 class="px-2 py-1 text-sm bg-elevated border border-border rounded-md text-secondary hover:text-accent hover:border-accent transition-colors font-mono"
               >
                 #{relatedTag}
@@ -152,6 +153,7 @@ export async function getStaticPaths() {
     <div class="mt-8 pt-6 border-t border-border">
       <a
         href="/tags"
+        data-astro-prefetch="hover"
         class="inline-flex items-center gap-2 text-secondary hover:text-accent transition-colors font-mono text-sm"
       >
         <Icon class="w-4 h-4" name="material-symbols:arrow-back" />
