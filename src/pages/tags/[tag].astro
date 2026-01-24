@@ -1,42 +1,163 @@
 ---
 import PageLayout from "../../layouts/PageLayout.astro";
 import { getCollection } from "astro:content";
-import { getTitle } from "../../utils";
+import { getTitle, getDesc } from "../../utils";
+import { Icon } from "astro-icon/components";
+import { siteConfig } from "../../config";
 
 const { tag } = Astro.params;
-const { posts } = Astro.props;
-const pageTitle = getTitle(`The ${tag} overview`);
+const { posts, notes, relatedTags } = Astro.props;
+const pageTitle = getTitle(`#${tag}`);
+
+// Combine and sort all content by date (newest first)
+const allContent = [
+  ...posts.map((p: any) => ({ ...p, type: 'post' })),
+  ...notes.map((n: any) => ({ ...n, type: 'note' }))
+].sort((a: any, b: any) =>
+  b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const postCount = posts.length;
+const noteCount = notes.length;
 
 export async function getStaticPaths() {
   const allPosts = await getCollection("posts");
-  const uniqueTags = [
-    ...new Set(allPosts.map((post: any) => post.data.tags).flat()),
-  ];
+  const allNotes = await getCollection("notes");
+
+  // Combine tags from both collections
+  const postTags = allPosts.flatMap((post: any) => post.data.tags || []);
+  const noteTags = allNotes.flatMap((note: any) => note.data.tags || []);
+  const uniqueTags = [...new Set([...postTags, ...noteTags])];
 
   return uniqueTags.map((tag) => {
     const filteredPosts = allPosts.filter((post: any) =>
-      post.data.tags.includes(tag),
+      post.data.tags?.includes(tag),
     );
+    const filteredNotes = allNotes.filter((note: any) =>
+      note.data.tags?.includes(tag),
+    );
+
+    // Find related tags (tags that appear together with this tag)
+    const relatedTagsSet = new Set<string>();
+    [...filteredPosts, ...filteredNotes].forEach((item: any) => {
+      item.data.tags?.forEach((t: string) => {
+        if (t !== tag) relatedTagsSet.add(t);
+      });
+    });
+
     return {
       params: { tag },
-      props: { posts: filteredPosts },
+      props: {
+        posts: filteredPosts,
+        notes: filteredNotes,
+        relatedTags: Array.from(relatedTagsSet).slice(0, 5)
+      },
     };
   });
 }
 ---
 
-<PageLayout title={pageTitle}>
+<PageLayout title={pageTitle} description={getDesc(`Posts tagged with ${tag}`)}>
+  <div data-pagefind-body>
+    <!-- Tag Header -->
+    <div class="base-card mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
+          <Icon class="w-6 h-6 text-accent" name="material-symbols:tag" />
+        </div>
+        <div class="flex-1">
+          <h1 class="text-2xl font-bold text-primary font-mono">#{tag}</h1>
+          <p class="text-secondary text-sm">
+            {postCount > 0 && <span>{postCount} {postCount === 1 ? 'post' : 'posts'}</span>}
+            {postCount > 0 && noteCount > 0 && <span>, </span>}
+            {noteCount > 0 && <span>{noteCount} {noteCount === 1 ? 'note' : 'notes'}</span>}
+          </p>
+        </div>
+      </div>
 
-  <article class="base-card article" data-pagefind-body>
-    <h1>All posts contains tag: {tag}</h1>
-  <ul>
-    {
-      posts.map((post: any) => (
-        <li>
-          <a href=`/posts/${post.id}`>{post.data.title}</a>
-        </li>
-      ))
-    }
-  </ul>
-  </article>
+      {relatedTags.length > 0 && (
+        <div class="mt-4 pt-4 border-t border-border">
+          <span class="text-xs text-secondary uppercase tracking-wider font-mono">Related tags</span>
+          <div class="flex flex-wrap gap-2 mt-2">
+            {relatedTags.map((relatedTag: string) => (
+              <a
+                href={`/tags/${relatedTag}`}
+                class="px-2 py-1 text-sm bg-elevated border border-border rounded-md text-secondary hover:text-accent hover:border-accent transition-colors font-mono"
+              >
+                #{relatedTag}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    <!-- Content Grid -->
+    <ul id="posts-list" class="space-y-4">
+      {
+        allContent.map((item: any) => (
+          <li class="post-item">
+            <a
+              class="card p-4 flex flex-col group block"
+              href={item.type === 'note' ? `/notes/${item.data.slug}` : `/posts/${item.data.slug}`}
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2">
+                    <h2 class="text-xl font-bold line-clamp-1 text-primary group-hover:text-accent transition-colors">
+                      {item.data.title}
+                    </h2>
+                    {item.type === 'note' && (
+                      <span class="text-xs bg-accent/10 text-accent px-1.5 py-0.5 rounded font-mono">note</span>
+                    )}
+                  </div>
+                  <p class="line-clamp-2 text-secondary mt-1">{item.data.description}</p>
+                </div>
+                <Icon
+                  class="w-5 h-5 text-secondary group-hover:text-accent transition-colors shrink-0 mt-1"
+                  name="material-symbols:arrow-outward"
+                />
+              </div>
+
+              <div class="mt-3 flex items-center gap-3 text-sm">
+                <time
+                  class="text-secondary font-mono"
+                  datetime={item.data.pubDate.toISOString()}
+                >
+                  {item.data.pubDate.toLocaleDateString(siteConfig.language)}
+                </time>
+
+                {item.data.tags && item.data.tags.length > 1 && (
+                  <div class="flex items-center gap-1.5 text-secondary">
+                    <span class="text-border">·</span>
+                    {item.data.tags
+                      .filter((t: string) => t !== tag)
+                      .slice(0, 3)
+                      .map((otherTag: string) => (
+                        <span class="text-xs bg-elevated px-1.5 py-0.5 rounded font-mono">
+                          {otherTag}
+                        </span>
+                      ))
+                    }
+                  </div>
+                )}
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <!-- Back to Tags -->
+    <div class="mt-8 pt-6 border-t border-border">
+      <a
+        href="/tags"
+        class="inline-flex items-center gap-2 text-secondary hover:text-accent transition-colors font-mono text-sm"
+      >
+        <Icon class="w-4 h-4" name="material-symbols:arrow-back" />
+        All tags
+      </a>
+    </div>
+  </div>
+
 </PageLayout>

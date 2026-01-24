@@ -1,14 +1,14 @@
 ---
-import type {CollectionEntry} from "astro:content";
 import type {Page} from "astro";
 import {Icon} from 'astro-icon/components'
 
 interface Props {
-    page: Page<CollectionEntry<'posts'>>
+    page: Page<any>
     class?: string
+    basePath?: string
 }
 
-const {page, class: className} = Astro.props
+const {page, class: className, basePath = ''} = Astro.props
 
 let count = 1
 let l = page.currentPage
@@ -37,35 +37,36 @@ if (r < page.lastPage - 2) pages.push(-1);
 if (r === page.lastPage - 2) pages.push(page.lastPage - 1);
 if (r < page.lastPage) pages.push(page.lastPage);
 
-const getUrl = (page: number) => {
-    return page === 1 ? '/' : `/${page}`
+const getUrl = (pageNum: number) => {
+    const base = basePath ? `/${basePath}` : '';
+    return pageNum === 1 ? (base || '/') : `${base}/${pageNum}`;
 }
 ---
 <div class:list={[className, 'flex space-x-2']}>
-    <a href={page.url.prev} class:list={["block p-2 rounded-xl bg-base transition-all",
-        page.url.prev ? 'hover:bg-hover cursor-pointer' : 'text-secondary']}>
+    <a href={page.url.prev} class:list={["block p-2 rounded-xl bg-base border border-border transition-all",
+        page.url.prev ? 'hover:bg-hover hover:text-accent cursor-pointer' : 'text-secondary opacity-50']}>
         <Icon class="w-8 h-8" name="material-symbols:chevron-left-rounded"/>
     </a>
 
-    <div class="flex rounded-xl bg-base transition-all font-bold">
+    <div class="flex rounded-xl bg-base border border-border transition-all font-mono">
         {
             pages.map(p => {
                 if (p === -1) {
                     return (
-                            <Icon class="self-center" name="material-symbols:more-horiz"/>
+                            <Icon class="self-center text-secondary" name="material-symbols:more-horiz"/>
                     )
                 }
                 if (p === page.currentPage) {
                     return (
                             <a href={getUrl(p)}
-                               class="flex items-center justify-center w-12 rounded-xl bg-hover active:bg-active">
+                               class="flex items-center justify-center w-12 rounded-xl bg-accent text-back font-bold">
                                 {p}
                             </a>
                     )
                 }
                 return (
                         <a href={getUrl(p)}
-                           class="flex items-center justify-center w-12 rounded-xl transition-all hover:bg-hover active:bg-active">
+                           class="flex items-center justify-center w-12 rounded-xl transition-all hover:bg-hover hover:text-accent active:bg-active">
                             {p}
                         </a>
                 )
@@ -73,8 +74,8 @@ const getUrl = (page: number) => {
         }
     </div>
 
-    <a href={page.url.next} class:list={["block p-2 rounded-xl bg-base transition-all",
-        page.url.next ? 'hover:bg-hover cursor-pointer' : 'text-secondary']}>
+    <a href={page.url.next} class:list={["block p-2 rounded-xl bg-base border border-border transition-all",
+        page.url.next ? 'hover:bg-hover hover:text-accent cursor-pointer' : 'text-secondary opacity-50']}>
         <Icon class="w-8 h-8" name="material-symbols:chevron-right-rounded"/>
     </a>
 </div>

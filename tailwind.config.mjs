@@ -7,10 +7,21 @@ export default {
             colors: {
                 base: 'rgb(var(--color-base))',
                 back: 'rgb(var(--color-back))',
+                elevated: 'rgb(var(--color-elevated))',
                 primary: 'rgb(var(--color-primary))',
                 secondary: 'rgb(var(--color-secondary))',
+                border: 'rgb(var(--color-border))',
                 hover: 'rgb(var(--color-hover))',
                 active: 'rgb(var(--color-active))',
+                accent: 'rgb(var(--color-accent))',
+                'accent-hover': 'rgb(var(--color-accent-hover))',
+                'accent-muted': 'rgb(var(--color-accent-muted))',
+            },
+            fontFamily: {
+                mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
+            },
+            borderColor: {
+                DEFAULT: 'rgb(var(--color-border))',
             },
         },
     },

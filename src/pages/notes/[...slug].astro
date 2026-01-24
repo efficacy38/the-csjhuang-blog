@@ -8,32 +8,32 @@ import PageLayout from "../../layouts/PageLayout.astro";
 import { Icon } from "astro-icon/components";
 
 export async function getStaticPaths() {
-    const posts = await getCollection("posts", ({ data }) => {
+    const notes = await getCollection("notes", ({ data }) => {
         return import.meta.env.PROD ? data.isDraft !== true : true;
     });
 
-    // Sort posts by date for consistent prev/next order
-    posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+    // Sort notes by date for consistent prev/next order
+    notes.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-    return posts.map((post, index) => ({
-        params: { slug: post.data.slug },
+    return notes.map((note, index) => ({
+        params: { slug: note.data.slug },
         props: {
-            post,
-            prevPost: index < posts.length - 1 ? posts[index + 1] : null,
-            nextPost: index > 0 ? posts[index - 1] : null,
+            note,
+            prevNote: index < notes.length - 1 ? notes[index + 1] : null,
+            nextNote: index > 0 ? notes[index - 1] : null,
         },
     }));
 }
 
 interface Props {
-    post: CollectionEntry<"posts">;
-    prevPost: CollectionEntry<"posts"> | null;
-    nextPost: CollectionEntry<"posts"> | null;
+    note: CollectionEntry<"notes">;
+    prevNote: CollectionEntry<"notes"> | null;
+    nextNote: CollectionEntry<"notes"> | null;
 }
 
-const { post, prevPost, nextPost } = Astro.props;
-const { data } = post;
-const { Content, headings, remarkPluginFrontmatter } = await render(post);
+const { note, prevNote, nextNote } = Astro.props;
+const { data } = note;
+const { Content, headings, remarkPluginFrontmatter } = await render(note);
 const haveToc = headings.some(
     (heading) => heading.depth === 2 || heading.depth === 3,
 );
@@ -109,8 +109,8 @@ const haveToc = headings.some(
                     )
                 }
                 {
-                    post.data.tags &&
-                        post.data.tags.map((tag) => (
+                    note.data.tags &&
+                        note.data.tags.map((tag) => (
                             <Badge icon="material-symbols:tag">
                                 <a
                                     href={`/tags/${tag}`}
@@ -127,33 +127,33 @@ const haveToc = headings.some(
             <!-- Next/Prev Navigation -->
             <nav class="not-prose mt-8 pt-6 border-t border-border">
                 <div class="flex justify-between gap-4">
-                    {prevPost ? (
+                    {prevNote ? (
                         <a
-                            href={`/posts/${prevPost.data.slug}`}
+                            href={`/notes/${prevNote.data.slug}`}
                             class="flex-1 group p-4 rounded-xl border border-border hover:border-accent transition-colors"
-                            data-prev-url={`/posts/${prevPost.data.slug}`}
+                            data-prev-url={`/notes/${prevNote.data.slug}`}
                         >
                             <div class="flex items-center gap-2 text-secondary text-sm mb-1">
                                 <Icon class="w-4 h-4" name="material-symbols:arrow-back-rounded" />
                                 <span>Previous</span>
                             </div>
                             <div class="font-medium text-primary group-hover:text-accent transition-colors line-clamp-1">
-                                {prevPost.data.title}
+                                {prevNote.data.title}
                             </div>
                         </a>
                     ) : <div class="flex-1" />}
-                    {nextPost ? (
+                    {nextNote ? (
                         <a
-                            href={`/posts/${nextPost.data.slug}`}
+                            href={`/notes/${nextNote.data.slug}`}
                             class="flex-1 group p-4 rounded-xl border border-border hover:border-accent transition-colors text-right"
-                            data-next-url={`/posts/${nextPost.data.slug}`}
+                            data-next-url={`/notes/${nextNote.data.slug}`}
                         >
                             <div class="flex items-center justify-end gap-2 text-secondary text-sm mb-1">
                                 <span>Next</span>
                                 <Icon class="w-4 h-4" name="material-symbols:arrow-forward-rounded" />
                             </div>
                             <div class="font-medium text-primary group-hover:text-accent transition-colors line-clamp-1">
-                                {nextPost.data.title}
+                                {nextNote.data.title}
                             </div>
                         </a>
                     ) : <div class="flex-1" />}
@@ -203,13 +203,13 @@ const haveToc = headings.some(
             if (Math.abs(swipeDistance) < minSwipeDistance) return;
 
             if (swipeDistance > 0) {
-                // Swipe right -> go to previous post
+                // Swipe right -> go to previous note
                 const prevLink = document.querySelector('[data-prev-url]') as HTMLAnchorElement;
                 if (prevLink) {
                     window.location.href = prevLink.href;
                 }
             } else {
-                // Swipe left -> go to next post
+                // Swipe left -> go to next note
                 const nextLink = document.querySelector('[data-next-url]') as HTMLAnchorElement;
                 if (nextLink) {
                     window.location.href = nextLink.href;

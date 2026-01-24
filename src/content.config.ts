@@ -5,14 +5,20 @@ export const postSchema = z.object({
     title: z.string(),
     description: z.string(),
     pubDate: z.coerce.date(),
-    // heroImage: z.string().optional(),
+    heroImage: z.string().optional(),
     isDraft: z.boolean().optional(),
+    isPinned: z.boolean().optional(),
     tags: z.array(z.string()).optional(),
     slug: z.string(),
 });
 
 const posts = defineCollection({
     loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/posts" }),
+    schema: postSchema,
+});
+
+const notes = defineCollection({
+    loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/notes" }),
     schema: postSchema,
 });
 
@@ -48,4 +54,4 @@ const projects = defineCollection({
     schema: projectSchema,
 });
 
-export const collections = { posts, pages, links, projects };
+export const collections = { posts, pages, links, projects, notes };

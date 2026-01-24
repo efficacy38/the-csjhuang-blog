@@ -3,43 +3,149 @@ import PageLayout from "../../layouts/PageLayout.astro";
 import { getCollection } from "astro:content";
 import { getTitle, getDesc } from "../../utils";
 import { Icon } from "astro-icon/components";
+
 const allPosts = await getCollection("posts");
-const uniqueTags = [
-  ...new Set(allPosts.map((post: any) => post.data.tags).flat()),
-];
+const allNotes = await getCollection("notes");
+
+// Combine tags from both collections
+const postTags = allPosts.flatMap((post: any) => post.data.tags || []);
+const noteTags = allNotes.flatMap((note: any) => note.data.tags || []);
+const uniqueTags = [...new Set([...postTags, ...noteTags])];
+
 const data = uniqueTags.map((tag) => {
-  const filteredPostCount = allPosts.filter((post: any) =>
-    post.data.tags.includes(tag),
-  ).length;
+  const postsWithTag = allPosts.filter((post: any) =>
+    post.data.tags?.includes(tag),
+  );
+  const notesWithTag = allNotes.filter((note: any) =>
+    note.data.tags?.includes(tag),
+  );
+  const postCount = postsWithTag.length;
+  const noteCount = notesWithTag.length;
+  const totalCount = postCount + noteCount;
+
   return {
     tag: tag,
-    count: filteredPostCount,
+    count: totalCount,
+    postCount: postCount,
+    noteCount: noteCount,
+    isNoteOnly: postCount === 0 && noteCount > 0,
   };
 });
+
+// Sort: non-note-only tags first (by count desc), then note-only tags (by count desc)
+data.sort((a, b) => {
+  if (a.isNoteOnly !== b.isNoteOnly) {
+    return a.isNoteOnly ? 1 : -1;
+  }
+  // Sort by count descending, then alphabetically as tiebreaker
+  if (b.count !== a.count) {
+    return b.count - a.count;
+  }
+  return a.tag.localeCompare(b.tag);
+});
+
+// Count tags that are note-only
+const noteOnlyTagCount = data.filter(d => d.isNoteOnly).length;
 const pageTitle = getTitle("Tag Index");
 ---
 
 <PageLayout title={pageTitle} description={getDesc("The Tag Index Page")}>
-  <ul data-pagefind-body>
-    {
-      data.map(({ tag, count }) => (
-        <li>
-          <a href={`/tags/${tag}`} class="flex items-baseline p-4 card mb-4">
-            <h2 class="font-bold text-xl line-clamp-1">{tag}</h2>
-            <div
-              class="ml-2 rounded-lg w-6 h-6
-                inline-flex items-center justify-center 
-                bg-gray-200 text-gray-700 text-xl font-bold"
-            >
-              {count}
-            </div>
-            <Icon
-              class="ml-auto w-7 h-7 self-end shrink-0"
-              name="material-symbols:open-in-new"
+  <div data-pagefind-body>
+    <div class="base-card mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+          <Icon class="w-5 h-5 text-accent" name="material-symbols:tag" />
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-primary">Tags</h1>
+          <p class="text-secondary text-sm">
+            <span id="tag-count">{data.length - noteOnlyTagCount}</span> tags
+            {noteOnlyTagCount > 0 && (
+              <span id="note-tag-hint" class="text-xs">({noteOnlyTagCount} note-only hidden)</span>
+            )}
+          </p>
+        </div>
+        {noteOnlyTagCount > 0 && (
+          <label class="ml-auto flex items-center gap-2 cursor-pointer select-none">
+            <input
+              id="note-tag-toggle"
+              type="checkbox"
+              class="w-4 h-4 accent-accent cursor-pointer"
             />
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+            <span class="text-sm text-secondary whitespace-nowrap">Show all</span>
+          </label>
+        )}
+      </div>
+    </div>
+    <ul class="flex flex-wrap gap-3">
+      {
+        data.map(({ tag, count, isNoteOnly }) => (
+          <li
+            class="tag-item"
+            data-is-note-only={isNoteOnly ? "true" : "false"}
+            style={isNoteOnly ? "display: none;" : ""}
+          >
+            <a
+              href={`/tags/${tag}`}
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-base border border-border
+                     hover:border-accent hover:text-accent transition-colors group"
+            >
+              <span class="font-mono text-primary group-hover:text-accent transition-colors">
+                #{tag}
+              </span>
+              <span
+                class="px-1.5 py-0.5 rounded-md text-xs font-mono
+                       bg-elevated text-secondary"
+              >
+                {count}
+              </span>
+              {isNoteOnly && (
+                <Icon class="w-4 h-4 text-secondary" name="material-symbols:note-outline" title="notes only" />
+              )}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <script is:inline>
+    (function() {
+      function init() {
+        var checkbox = document.getElementById('note-tag-toggle');
+        var tagCount = document.getElementById('tag-count');
+        var noteTagHint = document.getElementById('note-tag-hint');
+        var noteOnlyItems = document.querySelectorAll('[data-is-note-only="true"]');
+        var allItems = document.querySelectorAll('.tag-item');
+
+        if (!checkbox) return;
+
+        function updateUI() {
+          var showNoteOnly = checkbox.checked;
+
+          // Show/hide note-only tags
+          for (var i = 0; i < noteOnlyItems.length; i++) {
+            noteOnlyItems[i].style.display = showNoteOnly ? '' : 'none';
+          }
+
+          // Update count
+          var visibleCount = showNoteOnly ? allItems.length : allItems.length - noteOnlyItems.length;
+          if (tagCount) tagCount.textContent = visibleCount;
+
+          // Update hint
+          if (noteTagHint) {
+            noteTagHint.textContent = showNoteOnly ? '' : '(' + noteOnlyItems.length + ' note-only tags hidden)';
+          }
+        }
+
+        checkbox.addEventListener('change', updateUI);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
 </PageLayout>

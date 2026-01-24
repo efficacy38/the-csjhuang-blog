@@ -19,12 +19,12 @@ const data = links.map(({ data }) => data);
                     <a
                         href={repo}
                         target="_blank"
-                        class="flex items-baseline p-4 card mb-4"
+                        class="flex items-center p-4 card mb-4 group"
                     >
-                        <h2 class="font-bold text-xl text-nowrap">{title}</h2>
-                        <p class="ml-4 max-sm:hidden">{description}</p>
+                        <h2 class="font-bold text-xl text-nowrap text-primary group-hover:text-accent transition-colors">{title}</h2>
+                        <p class="ml-4 max-sm:hidden text-secondary">{description}</p>
                         <Icon
-                            class="ml-auto w-7 h-7 self-end shrink-0"
+                            class="ml-auto w-5 h-5 shrink-0 text-secondary group-hover:text-accent transition-colors"
                             name="material-symbols:open-in-new"
                         />
                     </a>

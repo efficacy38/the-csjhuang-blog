@@ -19,17 +19,17 @@ const data = links.map(({ data }) => data).sort(() => Math.random() - 0.5);
         {
             data.map(({ title, description, url, avatar }) => (
                 <li>
-                    <a href={url} target="_blank" class="flex h-24 card p-2">
+                    <a href={url} target="_blank" class="flex h-24 card p-3 group">
                         <img
                             src={avatar}
                             alt={title}
-                            class="w-20 rounded-full shrink-0"
+                            class="w-16 h-16 rounded-full shrink-0 ring-2 ring-border group-hover:ring-accent transition-all"
                         />
-                        <div class="ml-4">
-                            <h2 class="font-bold text-xl line-clamp-1">
+                        <div class="ml-4 overflow-hidden">
+                            <h2 class="font-bold text-lg line-clamp-1 text-primary group-hover:text-accent transition-colors">
                                 {title}
                             </h2>
-                            <p class="line-clamp-2">{description}</p>
+                            <p class="line-clamp-2 text-sm text-secondary">{description}</p>
                         </div>
                     </a>
                 </li>

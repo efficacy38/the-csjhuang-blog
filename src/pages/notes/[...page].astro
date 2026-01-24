@@ -5,20 +5,23 @@ import { getCollection } from "astro:content";
 import Pagination from "../../components/Pagination.astro";
 import type { CollectionEntry } from "astro:content";
 import type { Page } from "astro";
+import { Icon } from "astro-icon/components";
 
 export async function getStaticPaths({ paginate }) {
-  const posts = await getCollection("posts", ({ data }) => {
-    return (
-      data.tags?.includes("note") &&
-      (import.meta.env.PROD ? data.isDraft !== true : true)
-    );
+  const notes = await getCollection("notes", ({ data }) => {
+    return import.meta.env.PROD ? data.isDraft !== true : true;
   });
-  posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-  return paginate(posts, { pageSize: siteConfig.page_size });
+  // Sort by pinned first, then by date
+  notes.sort((a, b) => {
+    if (a.data.isPinned && !b.data.isPinned) return -1;
+    if (!a.data.isPinned && b.data.isPinned) return 1;
+    return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+  });
+  return paginate(notes, { pageSize: siteConfig.page_size });
 }
 
 interface Props {
-  page: Page<CollectionEntry<"posts">>;
+  page: Page<CollectionEntry<"notes">>;
 }
 
 const { page } = Astro.props;
@@ -30,22 +33,40 @@ const { page } = Astro.props;
       {
         page.data.map((post) => (
           <li>
-            <a class="h-36 card p-4 flex flex-col" href={`/posts/${post.id}`}>
-              <h2 class="text-xl font-bold line-clamp-1">{post.data.title}</h2>
-              <p class="line-clamp-2">{post.data.description}</p>
-              <div class="mt-auto flex">
-                <time
-                  class="ml-auto"
-                  datetime={post.data.pubDate.toISOString()}
-                >
-                  {post.data.pubDate.toLocaleDateString(siteConfig.language)}
-                </time>
+            <a class="min-h-36 card p-4 flex gap-4 group" href={`/notes/${post.data.slug}`}>
+              {post.data.heroImage && (
+                <img
+                  src={post.data.heroImage}
+                  alt=""
+                  class="thumbnail"
+                  loading="lazy"
+                />
+              )}
+              <div class="flex flex-col grow min-w-0">
+                <div class="flex items-center gap-2">
+                  {post.data.isPinned && (
+                    <Icon
+                      class="w-5 h-5 text-accent shrink-0"
+                      name="material-symbols:push-pin"
+                    />
+                  )}
+                  <h2 class="text-xl font-bold line-clamp-1 text-primary group-hover:text-accent transition-colors">{post.data.title}</h2>
+                </div>
+                <p class="line-clamp-2 text-secondary">{post.data.description}</p>
+                <div class="mt-auto flex">
+                  <time
+                    class="ml-auto text-secondary font-mono text-sm"
+                    datetime={post.data.pubDate.toISOString()}
+                  >
+                    {post.data.pubDate.toLocaleDateString(siteConfig.language)}
+                  </time>
+                </div>
               </div>
             </a>
           </li>
         ))
       }
     </ul>
-    <Pagination class="mt-4 w-fit ml-auto" page={page} />
+    <Pagination class="mt-4 w-fit ml-auto" page={page} basePath="notes" />
   </div>
 </MainLayout>
