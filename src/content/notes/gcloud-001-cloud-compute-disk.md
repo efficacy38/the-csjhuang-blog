@@ -1,8 +1,9 @@
 ---
 title: Google Cloud：建立永久性磁碟
 description: 學習如何在 Google Cloud Compute Engine 中建立與管理永久性磁碟（Persistent Disk）
-pubDate: 2025-10-05
+date: 2025-10-05
 slug: gcloud-001-cloud-compute-disk
+series: "gcloud"
 tags:
   - "gcloud"
   - "google cloud AI study jam 2025"

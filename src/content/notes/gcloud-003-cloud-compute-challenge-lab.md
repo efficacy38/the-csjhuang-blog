@@ -1,8 +1,9 @@
 ---
 title: Google Cloud：Compute Engine 挑戰實驗室
 description: Compute Engine 基礎挑戰實驗：設置簡單的 Nginx 伺服器
-pubDate: 2025-10-05
+date: 2025-10-05
 slug: gcloud-003-cloud-compute-challenge-lab
+series: "gcloud"
 tags:
   - "gcloud"
   - "google cloud AI study jam 2025"

@@ -14,37 +14,37 @@ const { title, description, image } = Astro.props;
 
 <BaseLayout title={title} description={description} image={image}>
     <main class="mt-20 mb-4">
-        <div class="container-global flex items-start">
-            <aside
-                class="basis-[16rem] shrink-0 max-md:hidden sticky top-20 mr-4"
-            >
-                <slot name="aside">
-                    <div class="base-card flex flex-col items-center">
-                        <div class="relative">
-                            <img
-                                src={siteConfig.avatar}
-                                alt="avatar"
-                                class="w-48 h-48 rounded-full ring-2 ring-accent ring-offset-4 ring-offset-base transition-all"
-                            />
+        <div class="container-global flex items-stretch">
+            <div class="basis-[16rem] shrink-0 max-md:hidden mr-4">
+                <aside class="sticky top-20">
+                    <slot name="aside">
+                        <div class="base-card flex flex-col items-center">
+                            <div class="relative">
+                                <img
+                                    src={siteConfig.avatar}
+                                    alt="avatar"
+                                    class="w-48 h-48 rounded-full ring-2 ring-accent ring-offset-4 ring-offset-base transition-all"
+                                />
+                            </div>
+                            <div class="text-center font-bold text-xl mt-6 text-primary">
+                                {siteConfig.author}
+                            </div>
+                            <div class="flex self-center mt-3 space-x-3">
+                                {
+                                    socialLinks.map((link) => (
+                                        <a href={link.url} target="_blank" class="group">
+                                            <Icon
+                                                class="w-7 h-7 text-secondary group-hover:text-accent transition-colors"
+                                                name={link.icon}
+                                            />
+                                        </a>
+                                    ))
+                                }
+                            </div>
                         </div>
-                        <div class="text-center font-bold text-xl mt-6 text-primary">
-                            {siteConfig.author}
-                        </div>
-                        <div class="flex self-center mt-3 space-x-3">
-                            {
-                                socialLinks.map((link) => (
-                                    <a href={link.url} target="_blank" class="group">
-                                        <Icon
-                                            class="w-7 h-7 text-secondary group-hover:text-accent transition-colors"
-                                            name={link.icon}
-                                        />
-                                    </a>
-                                ))
-                            }
-                        </div>
-                    </div>
-                </slot>
-            </aside>
+                    </slot>
+                </aside>
+            </div>
 
             <slot />
         </div>

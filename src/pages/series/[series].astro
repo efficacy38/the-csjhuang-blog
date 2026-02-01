@@ -1,0 +1,142 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import { getCollection } from "astro:content";
+import { getTitle, getDesc } from "../../utils";
+import { Icon } from "astro-icon/components";
+import { siteConfig } from "../../config";
+import { getSeriesOrder } from "../../utils/series";
+
+const { series } = Astro.params;
+const { posts, notes } = Astro.props;
+const pageTitle = getTitle(`${series} 系列`);
+
+// Combine and sort all content by series order (ascending)
+const allContent = [
+  ...posts.map((p: any) => ({ ...p, type: 'post' })),
+  ...notes.map((n: any) => ({ ...n, type: 'note' }))
+].sort((a: any, b: any) => getSeriesOrder(a) - getSeriesOrder(b));
+
+const postCount = posts.length;
+const noteCount = notes.length;
+const totalCount = allContent.length;
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection("posts");
+  const allNotes = await getCollection("notes");
+
+  // Get unique series names from both collections
+  const postSeries = allPosts
+    .filter((post) => post.data.series)
+    .map((post) => post.data.series as string);
+  const noteSeries = allNotes
+    .filter((note) => note.data.series)
+    .map((note) => note.data.series as string);
+  const uniqueSeries = [...new Set([...postSeries, ...noteSeries])];
+
+  return uniqueSeries.map((series) => {
+    const filteredPosts = allPosts.filter((post) => post.data.series === series);
+    const filteredNotes = allNotes.filter((note) => note.data.series === series);
+
+    return {
+      params: { series },
+      props: {
+        posts: filteredPosts,
+        notes: filteredNotes,
+      },
+    };
+  });
+}
+---
+
+<PageLayout title={pageTitle} description={getDesc(`${series} 系列文章`)}>
+  <div data-pagefind-body>
+    <!-- Series Header -->
+    <div class="base-card mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
+          <Icon class="w-6 h-6 text-accent" name="material-symbols:bookmark" />
+        </div>
+        <div class="flex-1">
+          <h1 class="text-2xl font-bold text-primary">{series} 系列</h1>
+          <p class="text-secondary text-sm">
+            {totalCount} 篇文章
+            {postCount > 0 && noteCount > 0 && (
+              <span class="text-xs">({postCount} posts, {noteCount} notes)</span>
+            )}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content List -->
+    <ul id="posts-list" class="space-y-4">
+      {
+        allContent.map((item: any, index: number) => (
+          <li class="post-item">
+            <a
+              class="card p-4 flex gap-4 group block"
+              href={item.type === 'note' ? `/notes/${item.data.slug}/` : `/posts/${item.data.slug}/`}
+            >
+              <!-- Part Number -->
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                <span class="text-lg font-bold text-accent">{index + 1}</span>
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2">
+                  <h2 class="text-xl font-bold line-clamp-1 text-primary group-hover:text-accent transition-colors" transition:name={`title-${item.data.slug}`}>
+                    {item.data.title}
+                  </h2>
+                  {item.type === 'note' && (
+                    <span class="text-xs bg-accent/10 text-accent px-1.5 py-0.5 rounded font-mono">note</span>
+                  )}
+                </div>
+                <p class="line-clamp-2 text-secondary mt-1">{item.data.description}</p>
+
+                <div class="mt-2 flex items-center gap-3 text-sm">
+                  <time
+                    class="text-secondary font-mono"
+                    datetime={item.data.date.toISOString()}
+                  >
+                    {item.data.date.toLocaleDateString(siteConfig.language)}
+                  </time>
+
+                  {item.data.tags && item.data.tags.length > 0 && (
+                    <div class="flex items-center gap-1.5 text-secondary">
+                      <span class="text-border">·</span>
+                      {item.data.tags
+                        .slice(0, 3)
+                        .map((tag: string) => (
+                          <span class="text-xs bg-elevated px-1.5 py-0.5 rounded font-mono">
+                            {tag}
+                          </span>
+                        ))
+                      }
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <Icon
+                class="w-5 h-5 text-secondary group-hover:text-accent transition-colors shrink-0 mt-1"
+                name="material-symbols:arrow-outward"
+              />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <!-- Back to Series -->
+    <div class="mt-8 pt-6 border-t border-border">
+      <a
+        href="/series"
+        data-astro-prefetch="hover"
+        class="inline-flex items-center gap-2 text-secondary hover:text-accent transition-colors font-mono text-sm"
+      >
+        <Icon class="w-4 h-4" name="material-symbols:arrow-back" />
+        All series
+      </a>
+    </div>
+  </div>
+</PageLayout>

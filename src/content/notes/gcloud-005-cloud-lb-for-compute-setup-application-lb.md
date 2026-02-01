@@ -2,7 +2,8 @@
 title: Google Cloud：設置應用程式負載平衡器
 description: 學習如何為 Compute Engine 配置 HTTP(S) 應用程式負載平衡器
 slug: gcloud-005-cloud-lb-for-compute-setup-application-lb
-pubDate: 2025-10-05
+series: "gcloud"
+date: 2025-10-05
 tags:
   - "gcloud"
   - "google cloud AI study jam 2025"

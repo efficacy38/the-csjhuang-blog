@@ -2,7 +2,8 @@
 title: Google Cloud：設置網路負載平衡器（Network LB）
 description: 學習如何為 Compute Engine 配置 Layer 4 網路負載平衡器
 slug: gcloud-004-cloud-lb-for-compute-setup-network-lb
-pubDate: 2025-10-05
+series: "gcloud"
+date: 2025-10-05
 tags:
   - "gcloud"
   - "google cloud AI study jam 2025"

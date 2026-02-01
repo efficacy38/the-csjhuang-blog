@@ -1,0 +1,255 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import Badge from "./Badge.astro";
+import { type CollectionEntry, render } from "astro:content";
+import { getTitle, getDesc } from "../utils";
+import { siteConfig } from "../config";
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  entry: CollectionEntry<"posts"> | CollectionEntry<"notes">;
+  prevEntry: CollectionEntry<"posts"> | CollectionEntry<"notes"> | null;
+  nextEntry: CollectionEntry<"posts"> | CollectionEntry<"notes"> | null;
+  urlPrefix: "/posts" | "/notes";
+}
+
+const { entry, prevEntry, nextEntry, urlPrefix } = Astro.props;
+const { data } = entry;
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const haveToc = headings.some(
+    (heading) => heading.depth === 2 || heading.depth === 3,
+);
+---
+
+<PageLayout
+    comments={true}
+    title={getTitle(data.title)}
+    description={getDesc(data.description)}
+>
+    <div class="flex items-start">
+        {
+            haveToc && (
+                <aside class="basis-[16rem] shrink-0 max-md:hidden sticky top-20 mr-4 bg-base border border-border transition-all rounded-xl p-3 max-h-[calc(100vh-6rem)] overflow-y-auto">
+                    <div class="text-xs font-mono text-secondary uppercase tracking-wider mb-2 px-2">On this page</div>
+                    <ul class="space-y-0.5">
+                        {headings.map((heading) => {
+                            switch (heading.depth) {
+                                case 2:
+                                    return (
+                                        <li>
+                                            <a
+                                                class="px-2 menu-item text-sm border-l-2 border-transparent hover:border-l-accent hover:text-accent"
+                                                href={`#${heading.slug}`}
+                                            >
+                                                {heading.text}
+                                            </a>
+                                        </li>
+                                    );
+                                case 3:
+                                    return (
+                                        <li>
+                                            <a
+                                                class="pl-5 pr-2 menu-item text-sm text-secondary border-l-2 border-transparent hover:border-l-accent hover:text-accent"
+                                                href={`#${heading.slug}`}
+                                            >
+                                                {heading.text}
+                                            </a>
+                                        </li>
+                                    );
+                            }
+                        })}
+                    </ul>
+                </aside>
+            )
+        }
+
+        <article class="article base-card grow" data-pagefind-body>
+            {data.heroImage && (
+                <img
+                    src={data.heroImage}
+                    alt=""
+                    class="hero-image not-prose mb-6"
+                    loading="eager"
+                    transition:name={`hero-${data.slug}`}
+                />
+            )}
+            <h1 id={data.title} transition:name={`title-${data.slug}`}>{data.title}</h1>
+
+            <div class="flex flex-wrap gap-2 not-prose mb-3">
+                <Badge icon="material-symbols:edit-calendar-rounded">
+                    {
+                        new Date(
+                            remarkPluginFrontmatter.lastModified,
+                        ).toLocaleDateString(siteConfig.language)
+                    }
+                </Badge>
+                {
+                    siteConfig.twikoo_uri && (
+                        <Badge icon="material-symbols:bar-chart-rounded">
+                            <span id="twikoo_visitors">...</span>
+                        </Badge>
+                    )
+                }
+                {
+                    data.series && (
+                        <Badge icon="material-symbols:bookmarks-rounded">
+                            <span class="text-accent">{data.series}</span>
+                        </Badge>
+                    )
+                }
+                {
+                    data.tags &&
+                        data.tags.map((tag) => (
+                            <Badge icon="material-symbols:tag">
+                                <a
+                                    href={`/tags/${tag}`}
+                                    class="flex p-1 justify-center"
+                                >
+                                    <span>{tag}</span>
+                                </a>
+                            </Badge>
+                        ))
+                }
+            </div>
+            <Content />
+
+            <!-- Next/Prev Navigation -->
+            <nav class="not-prose mt-8 pt-6 border-t border-border">
+                <div class="flex justify-between gap-4">
+                    {prevEntry ? (
+                        <a
+                            href={`${urlPrefix}/${prevEntry.data.slug}/`}
+                            class="flex-1 group p-4 rounded-xl border border-border hover:border-accent transition-colors"
+                            data-prev-url={`${urlPrefix}/${prevEntry.data.slug}`}
+                        >
+                            <div class="flex items-center gap-2 text-secondary text-sm mb-1">
+                                <Icon class="w-4 h-4" name="material-symbols:arrow-back-rounded" />
+                                <span>Previous</span>
+                            </div>
+                            <div class="font-medium text-primary group-hover:text-accent transition-colors line-clamp-1">
+                                {prevEntry.data.title}
+                            </div>
+                        </a>
+                    ) : <div class="flex-1" />}
+                    {nextEntry ? (
+                        <a
+                            href={`${urlPrefix}/${nextEntry.data.slug}/`}
+                            class="flex-1 group p-4 rounded-xl border border-border hover:border-accent transition-colors text-right"
+                            data-next-url={`${urlPrefix}/${nextEntry.data.slug}`}
+                        >
+                            <div class="flex items-center justify-end gap-2 text-secondary text-sm mb-1">
+                                <span>Next</span>
+                                <Icon class="w-4 h-4" name="material-symbols:arrow-forward-rounded" />
+                            </div>
+                            <div class="font-medium text-primary group-hover:text-accent transition-colors line-clamp-1">
+                                {nextEntry.data.title}
+                            </div>
+                        </a>
+                    ) : <div class="flex-1" />}
+                </div>
+            </nav>
+        </article>
+    </div>
+
+    <script>
+        import { debounce } from "../utils";
+
+        const links = document.querySelectorAll(".menu-item");
+        let isNavigating = false;
+
+        // Handle TOC link clicks - scroll directly without hash flickering
+        links.forEach((link) => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                const href = link.getAttribute("href") as string;
+                const target = document.querySelector(`[id="${href.slice(1)}"]`);
+                if (target) {
+                    isNavigating = true;
+                    target.scrollIntoView({ behavior: "smooth" });
+                    // Update hash after scroll completes
+                    setTimeout(() => {
+                        history.replaceState(null, "", href);
+                        // Update active state
+                        links.forEach((l) => {
+                            l.classList.remove("bg-hover", "border-l-accent", "text-accent");
+                            l.classList.add("border-transparent");
+                        });
+                        link.classList.add("bg-hover", "border-l-accent", "text-accent");
+                        link.classList.remove("border-transparent");
+                        isNavigating = false;
+                    }, 500);
+                }
+            });
+        });
+
+        // Scroll handler - only update when not actively navigating
+        const handler = debounce(() => {
+            if (isNavigating) return;
+
+            // Find the last heading that's above the 1/3 viewport threshold
+            let activeLink: Element | null = null;
+            for (const link of links) {
+                const href = link.getAttribute("href");
+                if (!href) continue;
+                const target = document.querySelector(`[id="${href.slice(1)}"]`);
+                if (target) {
+                    const offsetTop =
+                        target.getBoundingClientRect().top -
+                        document.body.clientHeight / 3;
+                    if (offsetTop <= 0) {
+                        activeLink = link;
+                    }
+                }
+            }
+
+            // Update highlight and URL only once for the active heading
+            if (activeLink) {
+                const href = activeLink.getAttribute("href") as string;
+                links.forEach((link) => {
+                    link.classList.remove("bg-hover", "border-l-accent", "text-accent");
+                    link.classList.add("border-transparent");
+                });
+                activeLink.classList.add("bg-hover", "border-l-accent", "text-accent");
+                activeLink.classList.remove("border-transparent");
+                history.replaceState(null, "", href);
+            }
+        });
+        document.addEventListener("scroll", handler);
+        document.addEventListener("DOMContentLoaded", handler);
+    </script>
+
+    <script>
+        // Swipe gesture navigation
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const minSwipeDistance = 100;
+
+        const handleSwipe = () => {
+            const swipeDistance = touchEndX - touchStartX;
+            if (Math.abs(swipeDistance) < minSwipeDistance) return;
+
+            if (swipeDistance > 0) {
+                // Swipe right -> go to previous
+                const prevLink = document.querySelector('[data-prev-url]') as HTMLAnchorElement;
+                if (prevLink) {
+                    window.location.href = prevLink.href;
+                }
+            } else {
+                // Swipe left -> go to next
+                const nextLink = document.querySelector('[data-next-url]') as HTMLAnchorElement;
+                if (nextLink) {
+                    window.location.href = nextLink.href;
+                }
+            }
+        };
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+    </script>
+</PageLayout>

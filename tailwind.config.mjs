@@ -18,7 +18,11 @@ export default {
                 'accent-muted': 'rgb(var(--color-accent-muted))',
             },
             fontFamily: {
-                mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
+                mono: [
+                    'Maple Mono CN',
+                    'ui-monospace',
+                    'monospace',
+                ],
             },
             borderColor: {
                 DEFAULT: 'rgb(var(--color-border))',

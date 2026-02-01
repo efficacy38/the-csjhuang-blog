@@ -1,8 +1,9 @@
 ---
 title: Log 處理工具比較
 description: 比較 Vector、Fluentd 與 Logstash 三大日誌處理工具的架構與效能
-pubDate: 2025-09-30
+date: 2025-09-30
 slug: observability-000-log-processing
+series: "observability"
 tags:
   - "log"
   - "observability"

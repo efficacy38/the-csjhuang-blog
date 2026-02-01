@@ -1,7 +1,7 @@
 ---
 title: 擴充 Filesystem 容量
 description: 這篇文章紀錄了在 Linux/FreeBSD 上如何擴充硬碟以及檔案系統的筆記
-pubDate: 2025-09-30
+date: 2025-09-30
 slug: filesystem-101
 tags:
     - "filesystem"

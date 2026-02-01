@@ -1,15 +1,15 @@
 ---
 
 ---
-<div id="search-container" class="fixed hidden inset-0 z-50 bg-back/90 backdrop-blur-md animate-in fade-in">
-    <div class="absolute top-16 left-1/2 -translate-x-1/2 container-global w-full h-full">
-        <form class="w-3/4 mx-auto max-md:w-full animate-in slide-in-from-top">
+<div id="search-container" class="fixed hidden inset-0 z-50 bg-back/90 backdrop-blur-md animate-in fade-in overflow-hidden" transition:persist>
+    <div class="absolute top-16 left-1/2 -translate-x-1/2 container-global w-full flex flex-col" style="max-height: calc(100vh - 5rem);">
+        <form class="w-3/4 mx-auto max-md:w-full animate-in slide-in-from-top shrink-0">
             <label>
                 <input name="search" autocomplete="off" placeholder="Search..."
                        class="w-full outline-0 bg-base border border-border focus:border-accent focus:ring-1 focus:ring-accent transition-all rounded-xl h-16 p-4 shadow-xl text-xl text-primary placeholder:text-secondary"/>
             </label>
         </form>
-        <div id="search-results" class="w-3/4 mx-auto max-md:w-full h-full overflow-y-auto rounded-xl mt-2">
+        <div id="search-results" class="w-3/4 mx-auto max-md:w-full overflow-y-auto rounded-xl mt-2 pb-4">
 
         </div>
     </div>
@@ -18,14 +18,47 @@
 <script is:inline>
     const searchContainer = document.querySelector("#search-container");
     const searchInput = searchContainer?.querySelector("input")
+    const searchResults = document.querySelector("#search-results")
+
+    function openSearch() {
+        searchContainer.classList.remove("hidden")
+        document.body.style.overflow = "hidden"
+    }
+
+    function closeSearch() {
+        searchContainer.classList.add("hidden")
+        document.body.style.overflow = ""
+    }
+
+    // Close when clicking on backdrop (not on form, input, or results)
     searchContainer?.addEventListener("click", (e) => {
-        if (e.target !== searchInput) {
-            searchContainer.classList.add("hidden")
+        if (e.target === searchContainer || e.target.closest(".container-global") === null) {
+            closeSearch()
+        } else if (e.target !== searchInput && !searchResults.contains(e.target) && !e.target.closest("form")) {
+            closeSearch()
         }
     })
     searchContainer?.querySelector("form")?.addEventListener("submit", (e) => {
         e.preventDefault()
+        // Navigate to first result on Enter
+        const firstResult = document.querySelector("#search-results a")
+        if (firstResult) {
+            window.location.href = firstResult.href
+        }
     })
+
+    // Handle Escape key on input to close immediately
+    searchInput?.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            e.preventDefault()
+            closeSearch()
+            searchInput.blur()
+        }
+    })
+
+    // Expose functions globally for Header to use
+    window.openSearch = openSearch
+    window.closeSearch = closeSearch
 
     const cancelablePromise = promise => {
         const controller = new AbortController()

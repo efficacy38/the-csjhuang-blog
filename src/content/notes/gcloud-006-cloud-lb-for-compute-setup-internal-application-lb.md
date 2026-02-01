@@ -1,8 +1,9 @@
 ---
 title: Google Cloud：設置內部應用程式負載平衡器
 description: 學習如何配置 Google Cloud 內部應用程式負載平衡器
-pubDate: 2025-10-05
+date: 2025-10-05
 slug: gcloud-006-cloud-lb-for-compute-setup-internal-application-lb
+series: "gcloud"
 tags:
   - "gcloud"
 ---
