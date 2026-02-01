@@ -14,7 +14,7 @@ const allContent = [
   ...posts.map((p: any) => ({ ...p, type: 'post' })),
   ...notes.map((n: any) => ({ ...n, type: 'note' }))
 ].sort((a: any, b: any) =>
-  b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  b.data.date.valueOf() - a.data.date.valueOf()
 );
 
 const postCount = posts.length;
@@ -123,9 +123,9 @@ export async function getStaticPaths() {
               <div class="mt-3 flex items-center gap-3 text-sm">
                 <time
                   class="text-secondary font-mono"
-                  datetime={item.data.pubDate.toISOString()}
+                  datetime={item.data.date.toISOString()}
                 >
-                  {item.data.pubDate.toLocaleDateString(siteConfig.language)}
+                  {item.data.date.toLocaleDateString(siteConfig.language)}
                 </time>
 
                 {item.data.tags && item.data.tags.length > 1 && (

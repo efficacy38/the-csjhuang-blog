@@ -1,8 +1,9 @@
 ---
 title: Google Cloud：負載平衡器挑戰實驗室
 description: 負載平衡器挑戰實驗：建立多個 Web 伺服器並配置負載平衡
-pubDate: 2025-10-05
+date: 2025-10-05
 slug: gcloud-007-cloud-lb-for-compute-challenge-lab
+series: "gcloud"
 tags:
   - "gcloud"
 ---

@@ -5,7 +5,7 @@ import {getCollection} from 'astro:content'
 
 // Check which collections have content
 const allNotes = await getCollection("notes");
-const hasNotes = allNotes.some(note => import.meta.env.DEV || !note.data.isDraft);
+const hasNotes = allNotes.some(note => import.meta.env.DEV || note.data.status !== "draft");
 const hasProjects = (await getCollection("projects")).length > 0;
 const hasLinks = (await getCollection("links")).length > 0;
 
@@ -76,21 +76,23 @@ const filteredLinks = navBarConfig.links.filter(link => {
     const searchButton = document.querySelector("#search");
     searchButton.addEventListener("click", () => {
         const searchContainer = document.querySelector("#search-container")
-        searchContainer.classList.toggle("hidden")
-        searchContainer.querySelector("input").focus()
+        if (searchContainer.classList.contains("hidden")) {
+            window.openSearch?.()
+            searchContainer.querySelector("input").focus()
+        } else {
+            window.closeSearch?.()
+        }
     })
 
     document.documentElement.addEventListener("keydown", (e) => {
         if (e.key === "/" && document.activeElement.tagName !== "INPUT") {
-            const searchContainer = document.querySelector("#search-container")
-            searchContainer.classList.remove("hidden")
+            window.openSearch?.()
             setTimeout(() => {
-                searchContainer.querySelector("input").focus()
+                document.querySelector("#search-container input")?.focus()
             })
         }
         if (e.key === "Escape") {
-            const searchContainer = document.querySelector("#search-container")
-            searchContainer.classList.add("hidden")
+            window.closeSearch?.()
         }
     })
 </script>

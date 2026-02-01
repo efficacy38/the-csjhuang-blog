@@ -1,8 +1,9 @@
 ---
 title: OpenSearch：Analyzer 與 Mapping 設定
 description: 學習 OpenSearch 的文字分析器與映射設定，包含動態模板
-pubDate: 2025-12-06
+date: 2025-12-06
 slug: observability-004-schema
+series: "observability"
 tags:
   - "observibility"
   - "opensearch"

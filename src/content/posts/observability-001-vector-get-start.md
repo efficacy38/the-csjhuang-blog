@@ -1,8 +1,9 @@
 ---
 title: Vector 入門指南
 description: Datadog Vector 可觀測性 data pipeline 工具的基礎介紹與架構解析
-pubDate: 2025-09-30
+date: 2025-09-30
 slug: observability-001-vector-get-start
+series: "observability"
 tags:
   - "observibility"
   - "vector"

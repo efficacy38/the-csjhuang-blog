@@ -2,7 +2,8 @@
 title: Google Cloud：使用 Compute Engine 架設 Web 應用
 description: 透過 Compute Engine 部署 Web 應用程式，涵蓋 Instance Template、MIG 與 Load Balancer
 slug: gcloud-002-cloud-compute-host-web-app
-pubDate: 2025-10-05
+series: "gcloud"
+date: 2025-10-05
 tags:
   - "gcloud"
   - "google cloud AI study jam 2025"

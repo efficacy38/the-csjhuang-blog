@@ -1,8 +1,9 @@
 ---
 title: Google Cloud：設置開發環境與 Cloud Storage
 description: 學習如何配置 Google Cloud 開發環境並使用 Cloud Storage 儲存服務
-pubDate: 2025-10-05
+date: 2025-10-05
 slug: gcloud-008-cloud-setup-dev-environment-cloud-storage
+series: "gcloud"
 tags:
   - "gcloud"
 ---

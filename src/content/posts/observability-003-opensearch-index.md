@@ -1,8 +1,9 @@
 ---
 title: OpenSearch：Document 與 Index 基礎
 description: 深入理解 OpenSearch 的文件與索引概念，包含 CRUD 操作與路由機制
-pubDate: 2025-12-05
+date: 2025-12-05
 slug: observability-003-opensearch-index
+series: "observability"
 tags:
   - "observibility"
   - "opensearch"

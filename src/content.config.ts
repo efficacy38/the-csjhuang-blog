@@ -4,12 +4,14 @@ import { file, glob } from "astro/loaders";
 export const postSchema = z.object({
     title: z.string(),
     description: z.string(),
-    pubDate: z.coerce.date(),
+    date: z.coerce.date(),  // Obsidian-compatible: renamed from pubDate
     heroImage: z.string().optional(),
-    isDraft: z.boolean().optional(),
+    status: z.enum(["draft", "published"]).default("published"),  // Replaces isDraft
     isPinned: z.boolean().optional(),
     tags: z.array(z.string()).optional(),
     slug: z.string(),
+    series: z.string().optional(),  // Series grouping for navigation
+    aliases: z.array(z.string()).optional(),  // Obsidian compatibility
 });
 
 const posts = defineCollection({

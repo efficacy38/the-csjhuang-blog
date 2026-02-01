@@ -1,0 +1,5 @@
+# NFS Export configuration for home directories
+# Based on Automount requirements from docs
+
+/exports/home *(rw,sync,no_subtree_check,no_root_squash)
+/exports/lab *(rw,sync,no_subtree_check,no_root_squash)

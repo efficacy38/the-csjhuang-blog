@@ -1,8 +1,9 @@
 ---
 title: OpenSearch 入門：架設你的第一個叢集
 description: 學習如何快速架設 OpenSearch 叢集，涵蓋 Bonsai、Docker 與 AWS 方案
-pubDate: 2025-12-02
+date: 2025-12-02
 slug: observability-002-opensearch-get-start
+series: "observability"
 tags:
   - "observibility"
   - "opensearch"

@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # nix related
 .direnv
+
+# fonts (generated from nix)
+public/fonts/

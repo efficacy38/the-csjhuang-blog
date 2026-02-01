@@ -1,8 +1,9 @@
 ---
 title: GPG Subkey 使用指南
 description: 深入介紹 GPG 子鑰（Subkey）的管理與使用，包含產生、匯出與指定用途
-pubDate: 2025-01-28
+date: 2025-01-28
 slug: gpg-subkey-usage
+series: "gpg"
 tags:
     - "cryptography"
     - "gpg"

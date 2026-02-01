@@ -1,0 +1,41 @@
+# FreeIPA Demo - Blog Example
+# Usage: just <command>
+
+project := env_var_or_default("COMPOSE_PROJECT_NAME", "freeipa-demo")
+
+# Show available commands
+default:
+    @just --list
+
+# Deploy FreeIPA demo environment
+up:
+    bash infrastructure/scripts/bootstrap.sh
+
+# Stop containers (preserves data)
+down:
+    docker compose -p {{project}} -f infrastructure/docker-compose.yml down
+    -docker stop {{project}}-freeipa-server-1
+
+# Destroy everything (containers, volumes, networks)
+destroy:
+    -docker compose -p {{project}} -f infrastructure/docker-compose.yml down -v --remove-orphans
+    -docker stop {{project}}-freeipa-server-1
+    -docker rm {{project}}-freeipa-server-1
+    -docker volume rm {{project}}_freeipa-data
+    -docker network rm {{project}}_ldap-network
+
+# Connect to FreeIPA container
+shell:
+    docker exec -it {{project}}-freeipa-server-1 bash
+
+# Show container status
+status:
+    @docker ps --format "table {{{{.Names}}}}\t{{{{.Status}}}}" | grep -E "({{project}}|NAMES)" || echo "No containers running"
+
+# Populate test data
+seed:
+    bash infrastructure/scripts/seed-data.sh
+
+# View FreeIPA logs
+logs:
+    docker logs {{project}}-freeipa-server-1 --tail 100 -f

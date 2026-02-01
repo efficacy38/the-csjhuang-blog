@@ -1,0 +1,86 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import { getCollection } from "astro:content";
+import { getTitle, getDesc } from "../../utils";
+import { Icon } from "astro-icon/components";
+
+const allPosts = await getCollection("posts");
+const allNotes = await getCollection("notes");
+
+// Get unique series names from both collections
+const postSeries = allPosts
+  .filter((post) => post.data.series)
+  .map((post) => post.data.series as string);
+const noteSeries = allNotes
+  .filter((note) => note.data.series)
+  .map((note) => note.data.series as string);
+const uniqueSeries = [...new Set([...postSeries, ...noteSeries])];
+
+const data = uniqueSeries.map((series) => {
+  const postsInSeries = allPosts.filter((post) => post.data.series === series);
+  const notesInSeries = allNotes.filter((note) => note.data.series === series);
+  const postCount = postsInSeries.length;
+  const noteCount = notesInSeries.length;
+  const totalCount = postCount + noteCount;
+
+  return {
+    series,
+    count: totalCount,
+    postCount,
+    noteCount,
+  };
+});
+
+// Sort by count descending, then alphabetically
+data.sort((a, b) => {
+  if (b.count !== a.count) {
+    return b.count - a.count;
+  }
+  return a.series.localeCompare(b.series);
+});
+
+const pageTitle = getTitle("Series Index");
+---
+
+<PageLayout title={pageTitle} description={getDesc("The Series Index Page")}>
+  <div data-pagefind-body>
+    <div class="base-card mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+          <Icon class="w-5 h-5 text-accent" name="material-symbols:bookmark" />
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-primary">Series</h1>
+          <p class="text-secondary text-sm">
+            {data.length} series
+          </p>
+        </div>
+      </div>
+    </div>
+    <ul class="flex flex-wrap gap-3">
+      {
+        data.map(({ series, count }) => (
+          <li>
+            <a
+              href={`/series/${series}`}
+              data-astro-prefetch="hover"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-base border border-border
+                     hover:border-accent hover:text-accent transition-colors group"
+            >
+              <Icon class="w-4 h-4 text-accent" name="material-symbols:bookmark" />
+              <span class="font-mono text-primary group-hover:text-accent transition-colors">
+                {series}
+              </span>
+              <span
+                class="px-1.5 py-0.5 rounded-md text-xs font-mono
+                       bg-elevated text-secondary"
+              >
+                {count}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</PageLayout>
