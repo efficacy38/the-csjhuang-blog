@@ -1,0 +1,33 @@
+# FreeIPA Demo - Supporting Services
+#
+# FreeIPA is started separately via bootstrap.sh (requires systemd in Docker)
+# This file provides the NFS server for the Kerberized NFS demo
+#
+# Usage: docker compose up -d
+
+services:
+  # NFS Server - For Kerberized home directory demo
+  # Related: FreeIPA 與 NFS 整合 blog post
+  nfs-server:
+    image: itsthenetwork/nfs-server-alpine:latest
+    hostname: nfs.lab.example.com
+    privileged: true
+    environment:
+      - SHARED_DIRECTORY=/exports
+    volumes:
+      - nfs-data:/exports
+      - ./config/nfs/exports:/etc/exports:ro
+    expose:
+      - "2049"
+    networks:
+      - ldap-network
+    restart: unless-stopped
+
+volumes:
+  nfs-data:
+    driver: local
+
+networks:
+  ldap-network:
+    name: ${COMPOSE_PROJECT_NAME:-freeipa-demo}_ldap-network
+    external: true
