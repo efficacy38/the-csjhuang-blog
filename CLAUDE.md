@@ -33,6 +33,21 @@ pnpm new -t tag1 -t tag2 "Title"      # Add tags (defaults to "unclassified")
 - **links**: Friend links in `src/content/data/links.json`
 - **projects**: Projects in `src/content/data/projects.json`
 
+### Post Filename Convention
+
+Posts use the format: `{series}-{number}-{short-slug}.md`
+
+- All lowercase, hyphen-separated
+- Series prefix groups related articles
+- Three-digit number for ordering within series
+
+Examples:
+```
+kerberos-001-freeipa-deployment.md
+ansible-003-postgresql-role.md
+observability-000-log-processing.md
+```
+
 ### Post Frontmatter Schema
 
 ```yaml
@@ -40,6 +55,7 @@ title: string (required)
 description: string (required)
 pubDate: date (required)
 slug: string (required)
+series: string (optional)    # Groups articles in a series
 isDraft: boolean (optional)
 tags: string[] (optional)
 ```
