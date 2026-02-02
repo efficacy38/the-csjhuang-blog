@@ -1,27 +1,22 @@
 ---
 title: OpenSearch：Document 與 Index 基礎
 description: 深入理解 OpenSearch 的文件與索引概念，包含 CRUD 操作與路由機制
-date: 2025-12-05
+date: 2025-12-04
 slug: observability-003-opensearch-index
 series: "observability"
 tags:
-  - "observibility"
+  - "observability"
   - "opensearch"
 ---
 
-<!--
-- what is document
-    - what is document id
-    - create/update document / upsert
-    - script update
-    - replace / delete document
-- how data update/delete works in opensearch
-- how doc routing works
-- what is index
-    - update by query
-    - delete by query
-    - batch operations
--->
+:::note
+**前置閱讀**
+
+本文假設你已經讀過系列的前幾篇文章：
+- [OpenSearch 入門：架設你的第一個叢集](/posts/observability-002-opensearch-get-start)——完成 OpenSearch 環境架設
+
+本文會使用 OpenSearch Dashboards 的 Dev Tools 來執行 API 操作。如果你還沒架設好環境，請先參考上一篇文章。
+:::
 
 ## OpenSearch document 與 index 基礎介紹
 
@@ -455,3 +450,68 @@ POST /my-first-index/_delete_by_query
 5. Shard Allocation 和 Document Routing 是 OpenSearch 中重要的概念，
    影響資料的分佈和查詢效能。
 6. bulk API 和 update/delete by query API 提供了高效處理大量資料的能力。
+
+## 思考題
+
+<details>
+<summary>Q1：為什麼 OpenSearch 的 update 操作實際上是「建立新版本」而非「原地修改」？</summary>
+
+這是因為 OpenSearch 底層使用的 Apache Lucene 採用 **Immutable Segment**（不可變段落）的設計。
+
+每個 segment 一旦寫入就不會被修改。當你「更新」一個 document 時，OpenSearch 實際上做了兩件事：
+1. 將舊版本標記為「已刪除」
+2. 寫入一份新的 document
+
+這種設計的好處是：
+- 避免寫入時的鎖競爭，提高並發效能
+- 簡化資料一致性的實作
+- 支援 Optimistic Concurrency Control（透過 `_version`、`_seq_no`、`_primary_term`）
+
+被標記刪除的舊版本會在 segment merge 時被真正清除。
+
+</details>
+
+<details>
+<summary>Q2：為什麼 primary shard 的數量在 index 建立後就不能更改？</summary>
+
+因為 **Document Routing** 的計算方式依賴 primary shard 的數量。
+
+OpenSearch 使用以下公式決定 document 該存到哪個 shard：
+```
+shard_num = hash(routing_value) % number_of_primary_shards
+```
+
+如果允許更改 primary shard 數量，已經存在的 document 的 routing 計算結果就會改變，導致 OpenSearch 找不到這些 document。
+
+如果真的需要更改 shard 數量，必須使用 **Reindex API** 將資料重新索引到新的 index。
+
+</details>
+
+<details>
+<summary>Q3：PUT 和 POST 建立 document 有什麼差別？什麼時候該用哪個？</summary>
+
+| 方法 | Document ID | 行為 |
+|------|-------------|------|
+| `POST /index/_doc/` | 自動產生 | 永遠建立新 document |
+| `PUT /index/_doc/123` | 手動指定 | 如果 ID 存在則覆蓋（replace） |
+
+使用建議：
+- **自動產生 ID**（POST）：適合 log、event 等不需要預先知道 ID 的資料
+- **手動指定 ID**（PUT）：適合有自然 key 的資料（如 user_id、order_id），可以做 upsert
+
+注意：用 PUT 覆蓋時會完全取代原有 document，如果只想更新部分欄位，應該使用 `_update` API。
+
+</details>
+
+<details>
+<summary>Q4：為什麼範例中 <code>_shards.successful</code> 只有 1，但 <code>_shards.total</code> 是 2？</summary>
+
+這是因為我們設定了 `number_of_replicas: 1`，表示每個 primary shard 會有一個 replica shard。
+
+在單節點環境中：
+- Primary shard 可以正常分配並寫入（successful = 1）
+- Replica shard 無法分配到其他節點，狀態為 UNASSIGNED（所以沒有計入 successful）
+
+這不影響資料的寫入，但代表資料沒有備份。在生產環境中，應該要有多個節點讓 replica shard 可以正常分配，以確保資料的高可用性。
+
+</details>

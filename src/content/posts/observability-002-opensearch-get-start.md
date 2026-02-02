@@ -1,13 +1,23 @@
 ---
 title: OpenSearch 入門：架設你的第一個叢集
 description: 學習如何快速架設 OpenSearch 叢集，涵蓋 Bonsai、Docker 與 AWS 方案
-date: 2025-12-02
+date: 2025-12-03
 slug: observability-002-opensearch-get-start
 series: "observability"
 tags:
-  - "observibility"
+  - "observability"
   - "opensearch"
 ---
+
+:::note
+**前置閱讀**
+
+本文假設你已經讀過系列的前幾篇文章：
+- [為什麼需要 Observability？](/posts/observability-000-intro)——理解 Observability 的核心概念
+- [Log Pipeline 架構與工具選型](/posts/observability-001-log-pipeline)——理解 Log Pipeline 各元件的角色
+
+本文會使用 Docker 快速架設 OpenSearch，如果你不熟悉 Docker，建議先了解 Docker 和 Docker Compose 的基本操作。
+:::
 
 ## 架設你的第一個 OpenSearch
 
@@ -193,3 +203,37 @@ Discover 提供了一個方便的介面讓你可以瀏覽和搜尋 OpenSearch �
    並且修改 security 相關設定後，需要重新跑一次 security_admin.sh 指令。
 4. 熟悉 OpenSearch Dashboards 的 Dev Tools 和 Discover 功能，
    有助於日後的使用與管理。
+
+## 思考題
+
+<details>
+<summary>Q1：為什麼 Docker Compose 範例中設定了 <code>discovery.type: single-node</code>？如果不設定會怎樣？</summary>
+
+OpenSearch 預設會嘗試與其他節點組成叢集。如果不設定 `discovery.type: single-node`，單一節點啟動時會因為找不到其他節點而無法正常運作（會一直等待 master 選舉）。
+
+設定為 `single-node` 後，OpenSearch 會跳過叢集發現流程，直接以單節點模式運作。這只適用於開發和測試環境，生產環境應該使用多節點叢集以確保高可用性。
+
+</details>
+
+<details>
+<summary>Q2：為什麼要設定 <code>bootstrap.memory_lock: true</code> 和 <code>ulimits.memlock</code>？</summary>
+
+這兩個設定是為了防止 JVM heap 被 swap 到磁碟。
+
+OpenSearch 使用 JVM 運行，如果 JVM heap 被 swap 到磁碟，會導致嚴重的效能問題（garbage collection 會變得極慢）。設定 `memory_lock: true` 告訴 OpenSearch 鎖定記憶體不被 swap，而 `ulimits.memlock: -1` 則是移除 Linux 對於 memory lock 的限制。
+
+</details>
+
+<details>
+<summary>Q3：<code>security_admin.sh</code> 腳本做了什麼？什麼時候需要執行它？</summary>
+
+`security_admin.sh` 是 OpenSearch Security 插件提供的管理工具，用於將安全性設定（使用者、角色、權限、audit 設定等）從 YAML 檔案載入到 OpenSearch 的內部索引中。
+
+需要執行的時機：
+1. 首次安裝 OpenSearch Security 插件後
+2. 修改了 `opensearch-security/` 目錄下的任何設定檔後
+3. 需要重設安全性設定時
+
+注意：執行此腳本需要使用有權限的憑證（如 kirk 憑證），並且會覆蓋現有的安全性設定。
+
+</details>
