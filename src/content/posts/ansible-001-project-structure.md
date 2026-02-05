@@ -14,6 +14,17 @@ tags:
 
 本系列假設你已經有 Ansible 的基礎知識——知道什麼是 playbook、跑過幾個簡單的 playbook，但還沒有自己從頭寫過 role。
 
+## 系列文章總覽
+
+| 篇章 | 主題 | 核心內容 |
+|------|------|----------|
+| 1 | [專案結構與 Convention](/posts/ansible-001-project-structure) | 目錄結構、Role 組織、ansible.cfg、CLI 工具 |
+| 2 | [Inventory 與變數管理](/posts/ansible-002-inventory-variables) | group_vars、host_vars、變數優先順序 |
+| 3 | [撰寫 PostgreSQL Role](/posts/ansible-003-postgresql-role) | Role 結構、Template/Jinja2、Handlers |
+| 4 | [撰寫 Flask App Role](/posts/ansible-004-flask-app-role) | virtualenv、systemd、條件執行、迴圈 |
+| 5 | [Nginx Role 與專案整合](/posts/ansible-005-nginx-integration) | 反向代理、Tags 策略、多 Playbook 設計 |
+| 6 | [Vault、進階技巧與測試](/posts/ansible-006-vault-advanced-testing) | 加密、Lookup Plugins、Rolling Update、Ansible Lint |
+
 ## 為什麼需要標準化的專案結構？
 
 當你剛開始學 Ansible 時，可能會把所有東西塞進一個 playbook 裡：

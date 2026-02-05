@@ -591,6 +591,74 @@ ansible -i inventory/dev web -m shell -a "systemctl status flask-demo"
 ansible -i inventory/dev web -m uri -a "url=http://localhost:5000/health"
 ```
 
+## 完整 Demo 專案
+
+:::note
+**完整範例專案**
+
+本文的完整範例專案可以在這裡取得：
+
+- **線上瀏覽**：[flask-deploy 專案結構](/demos/flask-deploy/)
+- **直接下載**：
+  ```bash
+  # 下載完整專案
+  curl -L https://blog.csjhuang.net/demos/flask-deploy.tar.gz | tar xz
+  cd flask-deploy
+  ```
+
+專案包含所有檔案：`ansible.cfg`、`inventory/`、`roles/flask_app/`、`site.yml` 等。
+:::
+
+### 專案目錄結構
+
+```
+flask-deploy/
+├── ansible.cfg
+├── requirements.yml
+├── site.yml
+├── inventory/
+│   └── dev/
+│       ├── hosts
+│       └── group_vars/
+│           ├── all.yml
+│           └── web.yml
+└── roles/
+    └── flask_app/
+        ├── defaults/main.yml
+        ├── vars/main.yml
+        ├── tasks/main.yml
+        ├── handlers/main.yml
+        ├── templates/
+        │   ├── flask-app.service.j2
+        │   └── gunicorn.conf.py.j2
+        └── files/
+            ├── app.py
+            └── requirements.txt
+```
+
+### 快速開始
+
+```bash
+# 1. 下載專案
+curl -L https://blog.csjhuang.net/demos/flask-deploy.tar.gz | tar xz
+cd flask-deploy
+
+# 2. 修改 inventory 中的主機 IP
+vim inventory/dev/hosts
+
+# 3. 安裝 collection
+ansible-galaxy collection install -r requirements.yml
+
+# 4. 測試連線
+ansible all -m ping
+
+# 5. 執行部署
+ansible-playbook site.yml
+
+# 6. 驗證部署
+ansible web -m uri -a "url=http://localhost:5000/health"
+```
+
 ## 總結
 
 在這篇文章中，我們學習了：

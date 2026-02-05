@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+bind = "{{ gunicorn_bind }}"
+workers = {{ gunicorn_workers }}
+timeout = {{ gunicorn_timeout }}
+keepalive = {{ gunicorn_keepalive }}
+accesslog = "{{ flask_app_log_path }}/access.log"
+errorlog = "{{ flask_app_log_path }}/error.log"
+loglevel = "info"
+proc_name = "{{ flask_app_name }}"

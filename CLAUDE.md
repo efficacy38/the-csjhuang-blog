@@ -48,6 +48,18 @@ ansible-003-postgresql-role.md
 observability-000-log-processing.md
 ```
 
+#### Ansible Series Example
+
+The `ansible` series demonstrates the complete naming convention:
+```
+ansible-001-project-structure.md      # 專案結構與 Convention
+ansible-002-inventory-variables.md    # Inventory 與變數管理
+ansible-003-postgresql-role.md        # 撰寫 PostgreSQL Role
+ansible-004-flask-app-role.md         # 撰寫 Flask App Role
+ansible-005-nginx-integration.md      # Nginx Role 與專案整合
+ansible-006-vault-advanced-testing.md # Vault、進階技巧與測試
+```
+
 ### Post Frontmatter Schema
 
 ```yaml

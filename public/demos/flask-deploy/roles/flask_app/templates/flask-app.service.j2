@@ -1,0 +1,30 @@
+# {{ ansible_managed }}
+[Unit]
+Description={{ flask_app_name }} Flask Application
+After=network.target
+
+[Service]
+Type=notify
+User={{ flask_app_user }}
+Group={{ flask_app_group }}
+WorkingDirectory={{ flask_app_path }}
+
+Environment="PATH={{ flask_venv_path }}/bin:/usr/bin"
+Environment="DB_HOST={{ flask_db_host }}"
+Environment="DB_PORT={{ flask_db_port }}"
+Environment="DB_NAME={{ flask_db_name }}"
+Environment="DB_USER={{ flask_db_user }}"
+Environment="DB_PASSWORD={{ flask_db_password }}"
+
+ExecStart={{ flask_venv_path }}/bin/gunicorn \
+    --config {{ flask_gunicorn_config }} \
+    app:app
+
+Restart=always
+RestartSec=5
+
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

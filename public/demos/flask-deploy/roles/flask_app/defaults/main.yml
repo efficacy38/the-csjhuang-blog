@@ -1,0 +1,22 @@
+---
+flask_app_name: flask-demo
+flask_app_port: 5000
+flask_workers: 2
+
+flask_app_user: flask
+flask_app_group: flask
+
+flask_app_path: /opt/flask-demo
+flask_venv_path: "{{ flask_app_path }}/venv"
+flask_app_log_path: /var/log/flask-demo
+
+flask_db_host: "{{ db_host | default('localhost') }}"
+flask_db_port: "{{ db_port | default(5432) }}"
+flask_db_name: "{{ db_name | default('flask_demo') }}"
+flask_db_user: "{{ db_user | default('flask_app') }}"
+flask_db_password: "{{ db_password | default('') }}"
+
+gunicorn_bind: "127.0.0.1:{{ flask_app_port }}"
+gunicorn_workers: "{{ flask_workers }}"
+gunicorn_timeout: 30
+gunicorn_keepalive: 2

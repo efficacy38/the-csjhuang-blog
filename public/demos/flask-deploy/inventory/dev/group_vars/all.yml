@@ -1,0 +1,14 @@
+---
+ansible_user: vagrant
+ansible_become: true
+ansible_python_interpreter: /usr/bin/python3
+
+app_env: development
+timezone: Asia/Taipei
+app_name: flask-demo
+
+db_host: "{{ hostvars['db01']['ansible_host'] | default('localhost') }}"
+db_port: 5432
+db_name: flask_demo
+db_user: flask_app
+db_password: "changeme"

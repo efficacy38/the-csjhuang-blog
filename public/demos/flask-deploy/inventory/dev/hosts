@@ -1,0 +1,9 @@
+[web]
+web01 ansible_host=192.168.56.11
+
+[db]
+db01 ansible_host=192.168.56.20
+
+[flask:children]
+web
+db

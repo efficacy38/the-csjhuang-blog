@@ -1,0 +1,3 @@
+---
+flask_app_port: 5000
+flask_workers: 2
