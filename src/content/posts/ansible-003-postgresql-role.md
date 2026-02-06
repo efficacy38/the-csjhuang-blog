@@ -1,7 +1,7 @@
 ---
 title: Ansible 實戰：撰寫 PostgreSQL Role
 description: 從零開始撰寫 PostgreSQL Role，學習 Role 結構、Template/Jinja2、Handlers，以及如何使用 community.postgresql collection
-pubDate: 2026-02-02
+date: 2026-02-02
 slug: ansible-003-postgresql-role
 series: "ansible"
 tags:

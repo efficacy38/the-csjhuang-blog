@@ -1,7 +1,7 @@
 ---
 title: Ansible 實戰：Vault、進階技巧與測試
 description: 使用 Ansible Vault 加密敏感資訊、Rolling Update 策略、錯誤處理，以及 Ansible Lint 測試
-pubDate: 2026-02-02
+date: 2026-02-02
 slug: ansible-006-vault-advanced-testing
 series: "ansible"
 tags:

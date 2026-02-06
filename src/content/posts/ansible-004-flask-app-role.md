@@ -1,7 +1,7 @@
 ---
 title: Ansible 實戰：撰寫 Flask App Role
 description: 撰寫 Flask 應用部署 Role，學習 virtualenv 管理、systemd service 模板，以及條件執行與迴圈的進階用法
-pubDate: 2026-02-02
+date: 2026-02-02
 slug: ansible-004-flask-app-role
 series: "ansible"
 tags:

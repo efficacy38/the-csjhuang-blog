@@ -1,7 +1,7 @@
 ---
 title: Ansible 實戰：Nginx Role 與專案整合
 description: 撰寫 Nginx 反向代理 Role，設計 Tags 策略，並整合所有 Roles 建立完整的 site.yml
-pubDate: 2026-02-02
+date: 2026-02-02
 slug: ansible-005-nginx-role-integration
 series: "ansible"
 tags:

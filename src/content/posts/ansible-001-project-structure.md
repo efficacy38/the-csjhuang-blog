@@ -1,7 +1,7 @@
 ---
 title: Ansible 實戰：專案結構與 Convention
 description: 介紹 Ansible 專案的標準目錄結構、常見 Convention，以及本系列將要建構的 Flask + Nginx + PostgreSQL 三層架構
-pubDate: 2026-02-02
+date: 2026-02-02
 slug: ansible-001-project-structure
 series: "ansible"
 tags:

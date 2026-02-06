@@ -1,7 +1,7 @@
 ---
 title: Ansible 實戰：Inventory 與變數管理
 description: 深入介紹 Ansible 的 Inventory 設計、group_vars/host_vars 的使用時機，以及變數優先順序
-pubDate: 2026-02-02
+date: 2026-02-02
 slug: ansible-002-inventory-variables
 series: "ansible"
 tags:
