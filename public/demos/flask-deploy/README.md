@@ -1,6 +1,6 @@
 # Flask Deploy Demo
 
-這是 [Ansible 實戰：撰寫 Flask App Role](/posts/ansible-004-flask-app-role) 文章的完整範例專案。
+這是 [Ansible 實戰：撰寫 Flask App Role](https://blog.csjhuang.net/posts/ansible-004-flask-app-role) 文章的完整範例專案。
 
 ## 專案結構
 
@@ -32,23 +32,19 @@ flask-deploy/
 ## 快速開始
 
 ```bash
-# 1. 下載專案
-curl -L https://blog.csjhuang.net/demos/flask-deploy.tar.gz | tar xz
-cd flask-deploy
-
-# 2. 修改 inventory 中的主機 IP
+# 1. 修改 inventory 中的主機 IP
 vim inventory/dev/hosts
 
-# 3. 安裝 collection
+# 2. 安裝 collection
 ansible-galaxy collection install -r requirements.yml
 
-# 4. 測試連線
+# 3. 測試連線
 ansible all -m ping
 
-# 5. 執行部署
+# 4. 執行部署
 ansible-playbook site.yml
 
-# 6. 驗證部署
+# 5. 驗證部署
 ansible web -m uri -a "url=http://localhost:5000/health"
 ```
 
@@ -85,9 +81,9 @@ db_password: "your_secure_password"
 
 ## 相關文章
 
-- [Ansible 實戰：專案結構與 Convention](/posts/ansible-001-project-structure)
-- [Ansible 實戰：Inventory 與變數管理](/posts/ansible-002-inventory-variables)
-- [Ansible 實戰：撰寫 PostgreSQL Role](/posts/ansible-003-postgresql-role)
-- [Ansible 實戰：撰寫 Flask App Role](/posts/ansible-004-flask-app-role)
-- [Ansible 實戰：Nginx Role 與專案整合](/posts/ansible-005-nginx-integration)
-- [Ansible 實戰：Vault、進階技巧與測試](/posts/ansible-006-vault-advanced-testing)
+- [Ansible 實戰：專案結構與 Convention](https://blog.csjhuang.net/posts/ansible-001-project-structure)
+- [Ansible 實戰：Inventory 與變數管理](https://blog.csjhuang.net/posts/ansible-002-inventory-variables)
+- [Ansible 實戰：撰寫 PostgreSQL Role](https://blog.csjhuang.net/posts/ansible-003-postgresql-role)
+- [Ansible 實戰：撰寫 Flask App Role](https://blog.csjhuang.net/posts/ansible-004-flask-app-role)
+- [Ansible 實戰：Nginx Role 與專案整合](https://blog.csjhuang.net/posts/ansible-005-nginx-integration)
+- [Ansible 實戰：Vault、進階技巧與測試](https://blog.csjhuang.net/posts/ansible-006-vault-advanced-testing)

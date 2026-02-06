@@ -596,15 +596,7 @@ ansible -i inventory/dev web -m uri -a "url=http://localhost:5000/health"
 :::note
 **完整範例專案**
 
-本文的完整範例專案可以在這裡取得：
-
-- **線上瀏覽**：[flask-deploy 專案結構](/demos/flask-deploy/)
-- **直接下載**：
-  ```bash
-  # 下載完整專案
-  curl -L https://blog.csjhuang.net/demos/flask-deploy.tar.gz | tar xz
-  cd flask-deploy
-  ```
+本文的完整範例專案可以在這裡取得：[flask-deploy 專案結構](https://github.com/efficacy38/the-csjhuang-blog/tree/main/public/demos/flask-deploy)
 
 專案包含所有檔案：`ansible.cfg`、`inventory/`、`roles/flask_app/`、`site.yml` 等。
 :::
@@ -639,23 +631,19 @@ flask-deploy/
 ### 快速開始
 
 ```bash
-# 1. 下載專案
-curl -L https://blog.csjhuang.net/demos/flask-deploy.tar.gz | tar xz
-cd flask-deploy
-
-# 2. 修改 inventory 中的主機 IP
+# 1. 修改 inventory 中的主機 IP
 vim inventory/dev/hosts
 
-# 3. 安裝 collection
+# 2. 安裝 collection
 ansible-galaxy collection install -r requirements.yml
 
-# 4. 測試連線
+# 3. 測試連線
 ansible all -m ping
 
-# 5. 執行部署
+# 4. 執行部署
 ansible-playbook site.yml
 
-# 6. 驗證部署
+# 5. 驗證部署
 ansible web -m uri -a "url=http://localhost:5000/health"
 ```
 
